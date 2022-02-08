@@ -1,35 +1,42 @@
-SEMANTICKITTI_TO_CL ={0: 0,
-    1: 0,
-    10: 3,
-    11: 3,
-    13: 3,
-    15: 3,
-    16: 3,
-    18: 3,
-    20: 3,
-    30: 5,
-    31: 5,
-    32: 5,
-    40: 1,
-    44: 1,
-    48: 9,
-    49: 9,
-    50: 2,
-    51: 2,
-    52: 2,
-    60: 1,
-    70: 4,
-    71: 4,
-    72: 4,
-    80: 7,
-    81: 7,
-    99: 0,
-    252: 3,
-    253: 3,
-    254: 5,
-    255: 5,
-    256: 3,
-    257: 5,
-    258: 3,
-    259: 3
-}
+import argparse, os
+import numpy as np
+import open3d as o3d
+from SemanticKITTI.map_SemanticKITTI_to_CL import SEMANTICKITTI_TO_CL
+
+labels = 'labels/'
+pc = 'velodyne/'
+extension = '.bin'
+
+def read_and_apply_CL(root,seq,frame):
+    frame_name = str(int(frame)).zfill(6) + extension
+    seq_name = os.path.join(root, str(int(seq)).zfill(2))
+
+    path_pc = os.path.join(seq_name, os.path.join(pc, frame_name))
+    path_labels = os.path.join(seq_name, os.path.join(labels, frame_name))
+
+    pointcloud = np.fromfile(path_pc, dtype=np.float32, count=-1).reshape([-1,4])
+    labels_read = np.fromfile(path_labels, dtype=np.uint32)
+    sem_label = labels_read & 0xFFFF  
+    coarse_sem_label = np.zeros(sem_label.shape)
+
+    for k in range(len(sem_label)):
+        coarse_sem_label[k] = SEMANTICKITTI_TO_CL[sem_label[k]]
+
+    coarse_sem_label = coarse_sem_label.astype(np.int)
+
+    return coarse_sem_label
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--sequence", "-s", help="sequence number we want to check", default="00")
+    parser.add_argument("--frame", "-f", help="frame number we want to check", default="000000")
+    parser.add_argument("--directory", "-d", help="location of the semanticKITTI folder")
+    parser.add_argument("--saved", help="flag to save or not the relabelized frame", default=False)
+    args = parser.parse_args()
+
+    root_path = os.path.join(args.directory,'SemanticKITTI/dataset/sequences/')
+    coarse_sem_label = read_and_apply_CL(root_data, args.sequence, args.frame)
+
+    if args.saved:
+        np.save('semanticKITTI_{}_{}_to_macro.bin'.format(args.seequence,args.frame), coarse_sem_label)
+    
