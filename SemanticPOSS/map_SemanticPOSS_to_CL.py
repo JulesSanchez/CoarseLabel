@@ -1,6 +1,6 @@
 import argparse, os
 import numpy as np
-from SemanticKITTI.map_SemanticKITTI_to_CL import SEMANTICKITTI_TO_CL
+from SemanticPOSS.map_SemanticPOSS_to_CL import SEMANTICPOSS_TO_CL
 
 labels = 'labels/'
 pc = 'velodyne/'
@@ -19,7 +19,7 @@ def read_and_apply_CL(root,seq,frame):
     coarse_sem_label = np.zeros(sem_label.shape)
 
     for k in range(len(sem_label)):
-        coarse_sem_label[k] = SEMANTICKITTI_TO_CL[sem_label[k]]
+        coarse_sem_label[k] = SEMANTICPOSS_TO_CL[sem_label[k]]
 
     coarse_sem_label = coarse_sem_label.astype(np.int)
 
@@ -29,13 +29,13 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("--sequence", "-s", help="sequence number we want to check", default="00")
     parser.add_argument("--frame", "-f", help="frame number we want to check", default="000000")
-    parser.add_argument("--directory", "-d", help="location of the semanticKITTI folder")
+    parser.add_argument("--directory", "-d", help="location of the semanticPOSS folder")
     parser.add_argument("--saved", help="flag to save or not the relabelized frame", default=False)
     args = parser.parse_args()
 
-    root_path = os.path.join(args.directory,'SemanticKITTI/dataset/sequences/')
+    root_path = os.path.join(args.directory,'SemanticPOSS/dataset/sequences/')
     coarse_sem_label = read_and_apply_CL(root_path, args.sequence, args.frame)
 
     if args.saved:
-        np.save('semanticKITTI_{}_{}_to_macro.bin'.format(args.seequence,args.frame), coarse_sem_label)
+        np.save('semanticPOSS_{}_{}_to_macro.bin'.format(args.sequence,args.frame), coarse_sem_label)
     
