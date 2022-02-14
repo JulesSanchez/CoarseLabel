@@ -23,6 +23,7 @@ Link for the SRU-Net and SPVCNN pretrained model (with SemanticPOSS as the targe
 https://cloud.mines-paristech.fr/index.php/s/555t3DzzMmhA2xp
 
 SRU-Net is the default model from : https://github.com/facebookresearch/PointContrast
+
 SPVCNN is the default model from : https://github.com/mit-han-lab/spvnas
 
 If you use the coarse labels please cite us.
