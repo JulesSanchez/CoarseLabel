@@ -2,9 +2,6 @@ import argparse, os
 import numpy as np
 from KITTI360.table_KITTI360_to_CL import KITTI360_TO_CL
 
-labels = 'labels/'
-pc = 'velodyne_points/data/'
-extension = '.bin'
 
 def read_and_apply_CL(root,seq,frame):
     frame_name = str(int(frame)).zfill(10) + extension
@@ -15,7 +12,7 @@ def read_and_apply_CL(root,seq,frame):
     path_labels = os.path.join(seq_name_label, os.path.join(labels, frame_name))
 
     pointcloud = np.fromfile(path_pc, dtype=np.float32, count=-1).reshape([-1,4])
-    sem_label = np.fromfile(path_labels, dtype=np.uiint16nt32)
+    sem_label = np.fromfile(path_labels, dtype=np.int16)
     coarse_sem_label = np.zeros(sem_label.shape)
 
     for k in range(len(sem_label)):
