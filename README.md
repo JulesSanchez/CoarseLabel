@@ -26,16 +26,4 @@ SRU-Net is the default model from : https://github.com/facebookresearch/PointCon
 
 SPVCNN is the default model from : https://github.com/mit-han-lab/spvnas
 
-If you use the coarse labels please cite us:
-@misc{sanchez2022cola,
-      title={COLA: COarse LAbel pre-training for 3D semantic segmentation of sparse LiDAR datasets}, 
-      author={Jules Sanchez and Jean-Emmanuel Deschaud and François Goulette},
-      year={2022},
-      eprint={2202.06884},
-      archivePrefix={arXiv},
-      primaryClass={cs.CV}
-}
-
-
-
 
